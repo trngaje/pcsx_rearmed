@@ -873,6 +873,8 @@ me_bind_action emuctrl_actions[] =
 	{ "Volume Up        ", 1 << SACTION_VOLUME_UP },
 	{ "Volume Down      ", 1 << SACTION_VOLUME_DOWN },
 #endif
+	{ "Exit             ", 1 << SACTION_EXIT },
+ 
 	{ NULL,                0 }
 };
 

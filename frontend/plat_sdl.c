@@ -50,6 +50,7 @@ static const struct in_default_bind in_sdl_defbinds[] = {
   { SDLK_F8,     IN_BINDTYPE_EMU, SACTION_SWITCH_DISPMODE },
   { SDLK_F11,    IN_BINDTYPE_EMU, SACTION_TOGGLE_FULLSCREEN },
   { SDLK_BACKSPACE, IN_BINDTYPE_EMU, SACTION_FAST_FORWARD },
+  { SDLK_F12,    IN_BINDTYPE_EMU, SACTION_EXIT },
   { 0, 0, 0 }
 };
 

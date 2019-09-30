@@ -270,6 +270,11 @@ do_state_slot:
 		}
 		return;
 #endif
+
+	case SACTION_EXIT:
+	    emu_core_ask_exit();
+		return;
+		
 	default:
 		return;
 	}
