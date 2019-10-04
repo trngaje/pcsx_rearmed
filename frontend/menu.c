@@ -2506,7 +2506,8 @@ void menu_init(void)
 		exit(1);
 	}
 
-	emu_make_path(buff, "skin/background.png", sizeof(buff));
+    sprintf(buff, "/opt/retropie/emulators/pcsx-rearmed/skin/background.png");
+	//emu_make_path(buff, "skin/background.png", sizeof(buff));
 	readpng(g_menubg_src_ptr, buff, READPNG_BG, g_menuscreen_w, g_menuscreen_h);
 
 	i = plat_target.cpu_clock_set != NULL
