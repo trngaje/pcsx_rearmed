@@ -42,6 +42,8 @@ void DoBufferSwap(void)
  if (PreviousPSXDisplay.DisplayMode.x == 0 || PreviousPSXDisplay.DisplayMode.y == 0)
   return;
 
+ printf("DoBufferSwap = PreviousPSXDisplay.DisplayMode. x=%d, y=%d\r\n", PreviousPSXDisplay.DisplayMode.x,
+	PreviousPSXDisplay.DisplayMode.y);
  /* careful if rearranging this code, we try to set mode and flip
   * to get the hardware apply both changes at the same time */
  if (PreviousPSXDisplay.DisplayMode.x != fbw || PreviousPSXDisplay.DisplayMode.y != fbh

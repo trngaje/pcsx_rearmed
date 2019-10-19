@@ -734,12 +734,14 @@ static unsigned short fname2color(const char *fname)
 static void draw_savestate_bg(int slot);
 
 #define MENU_ALIGN_LEFT
+/*
 #ifndef HAVE_PRE_ARMV7 // assume hires device
 #define MENU_X2 1
 #else
 #define MENU_X2 0
 #endif
-
+*/
+#define MENU_X2 1
 #include "libpicofe/menu.c"
 
 // a bit of black magic here
@@ -2506,8 +2508,16 @@ void menu_init(void)
 		exit(1);
 	}
 
-	emu_make_path(buff, "skin/background.png", sizeof(buff));
-	readpng(g_menubg_src_ptr, buff, READPNG_BG, g_menuscreen_w, g_menuscreen_h);
+	//emu_make_path(buff, "skin/background.png", sizeof(buff));
+	//sprintf(buff, "skin/background_320x240.png");
+	//sprintf(buff, "skin/background.png");
+	sprintf(buff, "skin/background_640x480.png");
+	printf("background path=%s\r\n", buff);
+	if (readpng(g_menubg_src_ptr, buff, READPNG_BG, g_menuscreen_w, g_menuscreen_h) < 0)
+	{
+		memset(g_menubg_src_ptr, 0, g_menuscreen_w * g_menuscreen_h * 2);		
+	}
+
 
 	i = plat_target.cpu_clock_set != NULL
 		&& plat_target.cpu_clock_get != NULL && cpu_clock_st > 0;
@@ -2556,17 +2566,42 @@ static void menu_leave_emu(void)
 	plat_video_menu_enter(ready_to_go);
 
 	memcpy(g_menubg_ptr, g_menubg_src_ptr, g_menuscreen_w * g_menuscreen_h * 2);
+
+	if (last_vout_w > 320)
+	{
+		printf("menu_leave_emu: last_vout_w=%d\r\n", last_vout_w);
+		//ex : 368
+		//last_vout_w = 320;
+	}
+
+	if (last_vout_h > 240)
+	{
+		printf("menu_leave_emu: last_vout_h=%d\r\n", last_vout_h);
+
+	}
+	
+	
 	if (pl_vout_buf != NULL && ready_to_go) {
-		int x = max(0, g_menuscreen_w - last_vout_w);
-		int y = max(0, g_menuscreen_h / 2 - last_vout_h / 2);
+		int x = max(0, (g_menuscreen_w - last_vout_w) / 2);
+		int y = max(0, (g_menuscreen_h - last_vout_h) / 2);
 		int w = min(g_menuscreen_w, last_vout_w);
 		int h = min(g_menuscreen_h, last_vout_h);
+		
+		printf("menu_leave_emu: x=%d, y=%d, w=%d, h=%d\r\n", x, y, w, h);
+
 		u16 *d = (u16 *)g_menubg_ptr + g_menuscreen_w * y + x;
+		
 		char *s = pl_vout_buf;
 
+		
+
 		if (last_vout_bpp == 16) {
-			for (; h > 0; h--, d += g_menuscreen_w, s += last_vout_w * 2)
+			printf("menu_leave_emu: last_vout_bpp == 16\r\n");
+			for (; h > 0; h--, d += g_menuscreen_w, s += last_vout_w*2)
+			{
 				menu_darken_bg(d, s, w, 0);
+				//memcpy(d, s, last_vout_w);
+			}
 		}
 		else {
 			for (; h > 0; h--, d += g_menuscreen_w, s += last_vout_w * 3) {

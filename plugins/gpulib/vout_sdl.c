@@ -21,11 +21,13 @@ int vout_init(void)
   SDL_SysWMinfo wminfo;
   int ret;
 
+#if 0
   ret = SDL_Init(SDL_INIT_VIDEO);
   if (ret != 0) {
     fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
     return ret;
   }
+#endif
 
   screen = SDL_SetVideoMode(1024, 512, 32, 0);
   if (screen == NULL) {

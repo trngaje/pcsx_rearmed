@@ -509,12 +509,22 @@ int main(int argc, char *argv[])
 {
 	char file[MAXPATHLEN] = "";
 	char path[MAXPATHLEN];
+	char abspath[MAXPATHLEN];
 	const char *cdfile = NULL;
 	const char *loadst_f = NULL;
 	int psxout = 0;
 	int loadst = 0;
 	int i;
 
+	// get realpath
+	realpath(argv[0], abspath);
+	printf("argv[0] = %s, abspath = %s\r\n", argv[0], abspath);	
+	char *dirpath = dirname(abspath);
+	chdir(dirpath);
+	printf("dirpath = %s\r\n", dirpath);
+	getcwd(path, MAXPATHLEN);
+	printf("path = %s\r\n", path);
+	
 	emu_core_preinit();
 
 	// read command line options
