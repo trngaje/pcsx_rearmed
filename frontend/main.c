@@ -5,6 +5,7 @@
  * See the COPYING file in the top-level directory.
  */
 
+#include <linux/limits.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
@@ -509,7 +510,7 @@ int main(int argc, char *argv[])
 {
 	char file[MAXPATHLEN] = "";
 	char path[MAXPATHLEN];
-	char abspath[MAXPATHLEN];
+	char abspath[PATH_MAX];
 	const char *cdfile = NULL;
 	const char *loadst_f = NULL;
 	int psxout = 0;
@@ -518,12 +519,13 @@ int main(int argc, char *argv[])
 
 	// get realpath
 	realpath(argv[0], abspath);
-	printf("argv[0] = %s, abspath = %s\r\n", argv[0], abspath);	
-	char *dirpath = dirname(abspath);
-	chdir(dirpath);
-	printf("dirpath = %s\r\n", dirpath);
+	//printf("argv[0] = %s, abspath = %s\r\n", argv[0], abspath);	
+	char *dirsep = strrchr(abspath, '/');
+    if( dirsep != 0 ) *dirsep = 0;
+    chdir(abspath);
+	
 	getcwd(path, MAXPATHLEN);
-	printf("path = %s\r\n", path);
+	//printf("path = %s\r\n", path);
 	
 	emu_core_preinit();
 

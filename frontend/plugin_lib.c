@@ -34,6 +34,10 @@
 #include "../libpcsxcore/psxmem_map.h"
 #include "../plugins/dfinput/externals.h"
 
+#if 1
+#include "libpicofe/plat_sdl.h" // added by trngaje
+#include <go2/display.h>
+#endif
 #define HUD_HEIGHT 10
 
 int in_type1, in_type2;
@@ -295,6 +299,9 @@ static void pl_vout_set_mode(int w, int h, int raw_w, int raw_h, int bpp)
 		pl_vout_bpp = vout_bpp;
 		pl_vout_yoffset = buf_yoffset;
 	}
+#if 1
+	pl_vout_w = go2_surface_stride_get(surface)/2;
+#endif
 	if (pl_vout_buf != NULL)
 		pl_vout_buf = (char *)pl_vout_buf
 			+ pl_vout_yoffset * pl_vout_w * pl_vout_bpp / 8;
@@ -310,6 +317,12 @@ static void pl_vout_flip(const void *vram, int stride, int bgr24, int w, int h)
 	int dstride = pl_vout_w, h1 = h;
 	int doffs;
 
+#if 1
+	pl_vout_buf = (unsigned char *)go2_surface_map(surface);
+	dstride = go2_surface_stride_get(surface)/2;
+	
+	dest = pl_vout_buf;
+#endif
 	pcnt_start(PCNT_BLIT);
 
 	if (vram == NULL) {

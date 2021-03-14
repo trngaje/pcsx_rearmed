@@ -402,7 +402,7 @@ if [ "x$sound_drivers" = "x" ]; then
     sound_drivers="$sound_drivers pulseaudio"
     MAIN_LDLIBS="-lpulse $MAIN_LDLIBS"
   fi
-  if [ "$need_sdl" = "yes" ] || check_sdl `sdl-config --cflags --libs`; then
+  if [ "$need_sdl" = "yes" ] || check_sdl `sdl2-config --cflags --libs`; then
     sound_drivers="$sound_drivers sdl"
     need_sdl="yes"
   fi
@@ -420,13 +420,16 @@ else
   fi
 fi
 
-if [ "$need_sdl" = "yes" ]; then
-  which sdl-config > /dev/null || \
-    fail "sdl-config is missing; please install libsdl (libsdl1.2-dev)"
-  CFLAGS="$CFLAGS `sdl-config --cflags`"
-  MAIN_LDLIBS="`sdl-config --libs` $MAIN_LDLIBS"
-  check_sdl || fail "please install libsdl (libsdl1.2-dev)"
-fi
+#if [ "$need_sdl" = "yes" ]; then
+#  which sdl2-config > /dev/null || \
+#    fail "sdl2-config is missing; please install libsdl (libsdl1.2-dev)"
+#  CFLAGS="$CFLAGS `sdl2-config --cflags`"
+#  MAIN_LDLIBS="`sdl2-config --libs` $MAIN_LDLIBS"
+#  check_sdl || fail "please install libsdl2 (libsdl2-dev)"
+#fi
+
+CFLAGS="$CFLAGS -I/usr/include/SDL2 -D_REENTRANT"
+MAIN_LDLIBS="-L/usr/lib/arm-linux-gnueabihf -Wl,-rpath,/usr/lib/arm-linux-gnueabihf -Wl,--enable-new-dtags -lSDL2 $MAIN_LDLIBS"
 
 # check for tslib (only headers needed)
 if [ "x$have_tslib" = "x" ]; then

@@ -24,7 +24,39 @@
 #include "plat.h"
 #include "revision.h"
 
+#if 1
+#include <go2/display.h>
+#include <drm/drm_fourcc.h>
+#endif
 static const struct in_default_bind in_sdl_defbinds[] = {
+#if 1
+  { SDL_SCANCODE_UP,     IN_BINDTYPE_PLAYER12, DKEY_UP },
+  { SDL_SCANCODE_DOWN,   IN_BINDTYPE_PLAYER12, DKEY_DOWN },
+  { SDL_SCANCODE_LEFT,   IN_BINDTYPE_PLAYER12, DKEY_LEFT },
+  { SDL_SCANCODE_RIGHT,  IN_BINDTYPE_PLAYER12, DKEY_RIGHT },
+  { SDL_SCANCODE_D,      IN_BINDTYPE_PLAYER12, DKEY_TRIANGLE },
+  { SDL_SCANCODE_Z,      IN_BINDTYPE_PLAYER12, DKEY_CROSS },
+  { SDL_SCANCODE_X,      IN_BINDTYPE_PLAYER12, DKEY_CIRCLE },
+  { SDL_SCANCODE_S,      IN_BINDTYPE_PLAYER12, DKEY_SQUARE },
+  { SDL_SCANCODE_V,      IN_BINDTYPE_PLAYER12, DKEY_START },
+  { SDL_SCANCODE_C,      IN_BINDTYPE_PLAYER12, DKEY_SELECT },
+  { SDL_SCANCODE_W,      IN_BINDTYPE_PLAYER12, DKEY_L1 },
+  { SDL_SCANCODE_R,      IN_BINDTYPE_PLAYER12, DKEY_R1 },
+  { SDL_SCANCODE_E,      IN_BINDTYPE_PLAYER12, DKEY_L2 },
+  { SDL_SCANCODE_T,      IN_BINDTYPE_PLAYER12, DKEY_R2 },
+  { SDL_SCANCODE_ESCAPE, IN_BINDTYPE_EMU, SACTION_ENTER_MENU },
+  { SDL_SCANCODE_F1,     IN_BINDTYPE_EMU, SACTION_SAVE_STATE },
+  { SDL_SCANCODE_F2,     IN_BINDTYPE_EMU, SACTION_LOAD_STATE },
+  { SDL_SCANCODE_F3,     IN_BINDTYPE_EMU, SACTION_PREV_SSLOT },
+  { SDL_SCANCODE_F4,     IN_BINDTYPE_EMU, SACTION_NEXT_SSLOT },
+  { SDL_SCANCODE_F5,     IN_BINDTYPE_EMU, SACTION_TOGGLE_FSKIP },
+  { SDL_SCANCODE_F6,     IN_BINDTYPE_EMU, SACTION_SCREENSHOT },
+  { SDL_SCANCODE_F7,     IN_BINDTYPE_EMU, SACTION_TOGGLE_FPS },
+  { SDL_SCANCODE_F8,     IN_BINDTYPE_EMU, SACTION_SWITCH_DISPMODE },
+  { SDL_SCANCODE_F11,    IN_BINDTYPE_EMU, SACTION_TOGGLE_FULLSCREEN },
+  { SDLK_BACKSPACE, IN_BINDTYPE_EMU, SACTION_FAST_FORWARD },
+  { SDL_SCANCODE_F12,    IN_BINDTYPE_EMU, SACTION_EXIT },
+#else
   { SDLK_UP,     IN_BINDTYPE_PLAYER12, DKEY_UP },
   { SDLK_DOWN,   IN_BINDTYPE_PLAYER12, DKEY_DOWN },
   { SDLK_LEFT,   IN_BINDTYPE_PLAYER12, DKEY_LEFT },
@@ -51,11 +83,30 @@ static const struct in_default_bind in_sdl_defbinds[] = {
   { SDLK_F11,    IN_BINDTYPE_EMU, SACTION_TOGGLE_FULLSCREEN },
   { SDLK_BACKSPACE, IN_BINDTYPE_EMU, SACTION_FAST_FORWARD },
   { SDLK_F12,    IN_BINDTYPE_EMU, SACTION_EXIT },
+ #endif 
   { 0, 0, 0 }
 };
 
 const struct menu_keymap in_sdl_key_map[] =
 {
+#if 1
+  { SDL_SCANCODE_UP,     PBTN_UP },
+  { SDL_SCANCODE_DOWN,   PBTN_DOWN },
+  { SDL_SCANCODE_LEFT,   PBTN_LEFT },
+  { SDL_SCANCODE_RIGHT,  PBTN_RIGHT },
+  { SDL_SCANCODE_RETURN, PBTN_MOK },
+  { SDL_SCANCODE_ESCAPE, PBTN_MBACK },
+  { SDL_SCANCODE_SEMICOLON,    PBTN_MA2 },
+  { SDLK_QUOTE,        PBTN_MA3 },
+  { SDL_SCANCODE_LEFTBRACKET,  PBTN_L },
+  { SDL_SCANCODE_RIGHTBRACKET, PBTN_R },
+  
+  // added by trngaje
+  { SDLK_WORLD_0, PBTN_MOK },
+  { SDLK_WORLD_0 + 1, PBTN_MBACK },
+  { SDLK_WORLD_0 + 2, PBTN_MA2 },
+  { SDLK_WORLD_0 + 3, PBTN_MA3 },  
+#else
   { SDLK_UP,     PBTN_UP },
   { SDLK_DOWN,   PBTN_DOWN },
   { SDLK_LEFT,   PBTN_LEFT },
@@ -66,10 +117,22 @@ const struct menu_keymap in_sdl_key_map[] =
   { SDLK_QUOTE,        PBTN_MA3 },
   { SDLK_LEFTBRACKET,  PBTN_L },
   { SDLK_RIGHTBRACKET, PBTN_R },
+#endif
 };
 
 const struct menu_keymap in_sdl_joy_map[] =
 {
+#if 1
+  { SDL_SCANCODE_UP,    PBTN_UP },
+  { SDL_SCANCODE_DOWN,  PBTN_DOWN },
+  { SDL_SCANCODE_LEFT,  PBTN_LEFT },
+  { SDL_SCANCODE_RIGHT, PBTN_RIGHT },
+  /* joystick */
+  { SDLK_WORLD_0 + 0, PBTN_MOK },
+  { SDLK_WORLD_0 + 1, PBTN_MBACK },
+  { SDLK_WORLD_0 + 2, PBTN_MA2 },
+  { SDLK_WORLD_0 + 3, PBTN_MA3 },   
+#else
   { SDLK_UP,    PBTN_UP },
   { SDLK_DOWN,  PBTN_DOWN },
   { SDLK_LEFT,  PBTN_LEFT },
@@ -79,6 +142,7 @@ const struct menu_keymap in_sdl_joy_map[] =
   { SDLK_WORLD_1, PBTN_MBACK },
   { SDLK_WORLD_2, PBTN_MA2 },
   { SDLK_WORLD_3, PBTN_MA3 },
+#endif
 };
 
 static const struct in_pdata in_sdl_platform_data = {
@@ -92,6 +156,10 @@ static const struct in_pdata in_sdl_platform_data = {
 static int psx_w, psx_h;
 static void *shadow_fb, *menubg_img;
 static int in_menu;
+
+#if 1
+extern int go2_w,go2_h;
+#endif
 
 static int change_video_mode(int force)
 {
@@ -145,7 +213,9 @@ void plat_init(void)
     exit(1);
 
   in_menu = 1;
+#if 0
   SDL_WM_SetCaption("PCSX-ReARMed " REV, NULL);
+#endif
 
   shadow_size = g_menuscreen_w * g_menuscreen_h * 2;
   if (shadow_size < 640 * 512 * 2)
@@ -202,11 +272,17 @@ static void overlay_blit(int doffs, const void *src_, int w, int h,
 {
   const unsigned short *src = src_;
   unsigned short *dst;
+  
+#if 1
+  int dstride = go2_surface_stride_get(surface); 
+
+  dst = (void *)go2_surface_map(surface);
+#else 
   int dstride = plat_sdl_overlay->w;
 
   SDL_LockYUVOverlay(plat_sdl_overlay);
   dst = (void *)plat_sdl_overlay->pixels[0];
-
+#endif
   dst += doffs;
   if (bgr24) {
     for (; h > 0; dst += dstride, src += sstride, h--)
@@ -217,14 +293,18 @@ static void overlay_blit(int doffs, const void *src_, int w, int h,
       bgr555_to_uyvy(dst, src, w);
   }
 
+#if 0
   SDL_UnlockYUVOverlay(plat_sdl_overlay);
+#endif
 }
 
 static void overlay_hud_print(int x, int y, const char *str, int bpp)
 {
+#if 0
   SDL_LockYUVOverlay(plat_sdl_overlay);
   basic_text_out_uyvy_nf(plat_sdl_overlay->pixels[0], plat_sdl_overlay->w, x, y, str);
   SDL_UnlockYUVOverlay(plat_sdl_overlay);
+#endif
 }
 
 void *plat_gvideo_set_mode(int *w, int *h, int *bpp)
@@ -232,6 +312,16 @@ void *plat_gvideo_set_mode(int *w, int *h, int *bpp)
   psx_w = *w;
   psx_h = *h;
   change_video_mode(0);
+
+#if 1
+	pl_plat_clear = NULL;
+	pl_plat_blit = NULL;
+	pl_plat_hud_print = NULL;
+
+	
+	return (void *)go2_surface_map(surface);
+#else
+
   if (plat_sdl_overlay != NULL) {
     pl_plat_clear = plat_sdl_overlay_clear;
     pl_plat_blit = overlay_blit;
@@ -247,10 +337,22 @@ void *plat_gvideo_set_mode(int *w, int *h, int *bpp)
     else
       return plat_sdl_screen->pixels;
   }
+#endif
 }
 
 void *plat_gvideo_flip(void)
 {
+#if 1
+/* 4:3 */
+	int size = go2_h * ((float)4.0 / 3.0);
+	int offset = (go2_w - size) / 2;
+	go2_presenter_post(presenter,
+			surface,
+			0, 0, window_w, window_h,
+			0, offset, go2_h, size,
+			GO2_ROTATION_DEGREES_270);		
+	return(void *)go2_surface_map(surface);
+#else
   if (plat_sdl_overlay != NULL) {
     SDL_Rect dstrect = { 0, 0, plat_sdl_screen->w, plat_sdl_screen->h };
     SDL_DisplayYUVOverlay(plat_sdl_overlay, &dstrect);
@@ -265,6 +367,7 @@ void *plat_gvideo_flip(void)
     SDL_Flip(plat_sdl_screen);
     return plat_sdl_screen->pixels;
   }
+#endif
 }
 
 void plat_gvideo_close(void)
@@ -274,6 +377,14 @@ void plat_gvideo_close(void)
 void plat_video_menu_enter(int is_rom_loaded)
 {
   int force_mode_change = 0;
+#if 1
+	unsigned short *dst = (uint8_t*)go2_surface_map(surface);
+
+    memcpy(menubg_img, dst, psx_w * psx_h * 2);
+	pl_vout_buf = menubg_img;
+	
+  in_menu = 1;
+#else
 
   in_menu = 1;
 
@@ -285,7 +396,7 @@ void plat_video_menu_enter(int is_rom_loaded)
   else
     memcpy(menubg_img, plat_sdl_screen->pixels, psx_w * psx_h * 2);
   pl_vout_buf = menubg_img;
-
+#endif
   /* gles plugin messes stuff up.. */
   if (pl_rearmed_cbs.gpu_caps & GPU_CAP_OWNS_DISPLAY)
     force_mode_change = 1;
@@ -295,6 +406,9 @@ void plat_video_menu_enter(int is_rom_loaded)
 
 void plat_video_menu_begin(void)
 {
+#if 1
+	g_menuscreen_ptr = (void *)go2_surface_map(surface);
+#else
   if (plat_sdl_overlay != NULL || plat_sdl_gl_active) {
     g_menuscreen_ptr = shadow_fb;
   }
@@ -302,10 +416,22 @@ void plat_video_menu_begin(void)
     SDL_LockSurface(plat_sdl_screen);
     g_menuscreen_ptr = plat_sdl_screen->pixels;
   }
+#endif
 }
 
 void plat_video_menu_end(void)
 {
+#if 1
+/* 4:3 */
+	int size = go2_h * ((float)4.0 / 3.0);
+	int offset = (go2_w - size) / 2;
+	go2_presenter_post(presenter,
+			surface,
+			0, 0, window_w, window_h,
+			0, offset, go2_h, size,
+			GO2_ROTATION_DEGREES_270);            
+		
+#else
   if (plat_sdl_overlay != NULL) {
     SDL_Rect dstrect = { 0, 0, plat_sdl_screen->w, plat_sdl_screen->h };
 
@@ -324,6 +450,7 @@ void plat_video_menu_end(void)
     SDL_Flip(plat_sdl_screen);
   }
   g_menuscreen_ptr = NULL;
+#endif
 }
 
 void plat_video_menu_leave(void)

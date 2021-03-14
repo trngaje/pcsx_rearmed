@@ -28,6 +28,7 @@
 #include "pcnt.h"
 #include "cspace.h"
 #include "libpicofe/plat.h"
+#include "libpicofe/plat_sdl.h" /* by trngaje */
 #include "libpicofe/input.h"
 #include "libpicofe/linux/in_evdev.h"
 #include "libpicofe/plat.h"
@@ -734,14 +735,13 @@ static unsigned short fname2color(const char *fname)
 static void draw_savestate_bg(int slot);
 
 #define MENU_ALIGN_LEFT
-/*
+
 #ifndef HAVE_PRE_ARMV7 // assume hires device
 #define MENU_X2 1
 #else
 #define MENU_X2 0
 #endif
-*/
-#define MENU_X2 1
+
 #include "libpicofe/menu.c"
 
 // a bit of black magic here
@@ -817,7 +817,7 @@ static void draw_savestate_bg(int slot)
 
 		// darken this so that menu text is visible
 		if (g_menuscreen_w - w < 320)
-			menu_darken_bg(d, d, w * 2, 0);
+			menu_darken_bg(d, d, w, 0);
 	}
 
 out:
@@ -1942,8 +1942,8 @@ static const char credits_text[] =
 	"PCSX4ALL plugin by PCSX4ALL team\n"
 	"  Chui, Franxis, Unai\n\n"
 	"integration, optimization and\n"
-	"  frontend (C) 2010-2015 notaz\n";
-
+	"  frontend (C) 2010-2015 notaz\n"
+	"DPad hat/Exit 2020-2021 trngaje\n";
 static int reset_game(void)
 {
 	// sanity check
@@ -2510,8 +2510,8 @@ void menu_init(void)
 
 	//emu_make_path(buff, "skin/background.png", sizeof(buff));
 	//sprintf(buff, "skin/background_320x240.png");
-	//sprintf(buff, "skin/background.png");
-	sprintf(buff, "skin/background_640x480.png");
+	sprintf(buff, "skin/background.png");
+	//sprintf(buff, "skin/background_640x480.png");
 	printf("background path=%s\r\n", buff);
 	if (readpng(g_menubg_src_ptr, buff, READPNG_BG, g_menuscreen_w, g_menuscreen_h) < 0)
 	{
@@ -2557,6 +2557,8 @@ void menu_notify_mode_change(int w, int h, int bpp)
 
 static void menu_leave_emu(void)
 {
+	int dstride = go2_surface_stride_get(surface)/2;
+		
 	if (GPU_close != NULL) {
 		int ret = GPU_close();
 		if (ret)
@@ -2589,7 +2591,7 @@ static void menu_leave_emu(void)
 		
 		printf("menu_leave_emu: x=%d, y=%d, w=%d, h=%d\r\n", x, y, w, h);
 
-		u16 *d = (u16 *)g_menubg_ptr + g_menuscreen_w * y + x;
+		u16 *d = (u16 *)g_menubg_ptr + dstride/*g_menuscreen_w*/ * y + x;
 		
 		char *s = pl_vout_buf;
 
@@ -2597,14 +2599,14 @@ static void menu_leave_emu(void)
 
 		if (last_vout_bpp == 16) {
 			printf("menu_leave_emu: last_vout_bpp == 16\r\n");
-			for (; h > 0; h--, d += g_menuscreen_w, s += last_vout_w*2)
+			for (; h > 0; h--, d += dstride/*g_menuscreen_w*/, s += last_vout_w*2)
 			{
 				menu_darken_bg(d, s, w, 0);
 				//memcpy(d, s, last_vout_w);
 			}
 		}
 		else {
-			for (; h > 0; h--, d += g_menuscreen_w, s += last_vout_w * 3) {
+			for (; h > 0; h--, d += dstride/*g_menuscreen_w*/, s += last_vout_w * 3) {
 				rgb888_to_rgb565(d, s, w * 3);
 				menu_darken_bg(d, d, w, 0);
 			}
